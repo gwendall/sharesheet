@@ -25,6 +25,7 @@ export function ShareMenuDrawer({
   title = "Share",
   shareUrl,
   shareText,
+  preview,
   downloadUrl,
   downloadFilename,
   disabled,
@@ -96,6 +97,7 @@ export function ShareMenuDrawer({
               title={title}
               shareUrl={shareUrl}
               shareText={shareText}
+              preview={preview}
               downloadUrl={downloadUrl}
               downloadFilename={downloadFilename}
               className={className}

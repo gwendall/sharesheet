@@ -123,8 +123,6 @@ export interface ShareMenuContentProps {
   shareText: string;
   /** Preview of content being shared (string URL or config object) */
   preview?: string | PreviewConfig | null;
-  /** @deprecated Use preview instead */
-  imageUrl?: string | null;
   /** Optional URL for download functionality */
   downloadUrl?: string | null;
   /** Filename for downloaded file */

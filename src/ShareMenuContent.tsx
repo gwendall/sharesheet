@@ -94,29 +94,25 @@ function cssVar(name: string, fallback: string): string {
 }
 
 // Normalize preview prop to PreviewConfig
-function normalizePreview(preview: string | PreviewConfig | null | undefined, imageUrl?: string | null): PreviewConfig | null {
-  // Handle deprecated imageUrl prop
-  const previewValue = preview ?? imageUrl;
+function normalizePreview(preview: string | PreviewConfig | null | undefined): PreviewConfig | null {
+  if (!preview) return null;
   
-  if (!previewValue) return null;
-  
-  if (typeof previewValue === "string") {
-    const type = detectPreviewType(previewValue);
+  if (typeof preview === "string") {
+    const type = detectPreviewType(preview);
     return {
-      url: previewValue,
+      url: preview,
       type,
-      filename: getFilenameFromUrl(previewValue),
+      filename: getFilenameFromUrl(preview),
     };
   }
   
   // It's already a config object
-  const config = previewValue as PreviewConfig;
-  const type = config.type === "auto" || !config.type ? detectPreviewType(config.url) : config.type;
+  const type = preview.type === "auto" || !preview.type ? detectPreviewType(preview.url) : preview.type;
   
   return {
-    ...config,
+    ...preview,
     type,
-    filename: config.filename || getFilenameFromUrl(config.url),
+    filename: preview.filename || getFilenameFromUrl(preview.url),
   };
 }
 
@@ -125,7 +121,6 @@ export function ShareMenuContent({
   shareUrl,
   shareText,
   preview,
-  imageUrl, // deprecated
   downloadUrl,
   downloadFilename,
   className,
@@ -152,7 +147,7 @@ export function ShareMenuContent({
   }, []);
 
   // Normalize preview config
-  const previewConfig = useMemo(() => normalizePreview(preview, imageUrl), [preview, imageUrl]);
+  const previewConfig = useMemo(() => normalizePreview(preview), [preview]);
 
   const shareMenu = useShareMenu({
     shareUrl,

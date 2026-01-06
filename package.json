@@ -1,6 +1,6 @@
 {
   "name": "@gwendall/share-menu",
-  "version": "1.0.5",
+  "version": "1.0.7",
   "description": "A beautiful share menu component with social media integrations",
   "publishConfig": {
     "access": "public",
