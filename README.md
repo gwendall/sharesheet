@@ -31,6 +31,21 @@ yarn add @gwendall/share-menu
 npm install react react-dom
 ```
 
+### Tailwind CSS Setup
+
+Add the package to your `tailwind.config.js` content array:
+
+```js
+// tailwind.config.js
+module.exports = {
+  content: [
+    "./src/**/*.{js,ts,jsx,tsx}",
+    "./node_modules/@gwendall/share-menu/dist/**/*.{js,mjs}", // 👈 Add this
+  ],
+  // ...
+}
+```
+
 ## 🚀 Quick Start
 
 ### Full Drawer (recommended)
@@ -237,9 +252,9 @@ Override these variables to match your theme:
 --share-menu-email-bg: #f97316;
 --share-menu-linkedin-bg: #0A66C2;
 --share-menu-reddit-bg: #FF4500;
---share-menu-x-bg: rgba(255, 255, 255, 0.1);
---share-menu-tiktok-bg: rgba(255, 255, 255, 0.1);
---share-menu-threads-bg: rgba(255, 255, 255, 0.1);
+--share-menu-x-bg: #000000;
+--share-menu-tiktok-bg: #000000;
+--share-menu-threads-bg: #000000;
 ```
 
 </details>
@@ -537,7 +552,7 @@ function ControlledExample() {
 - React 18+
 - Tailwind CSS (for default styling)
 
-> **Note:** If you're not using Tailwind, you can either use the headless hook to build your own UI, or override all classes via `classNames`.
+> **Note:** If you're not using Tailwind, you can use the headless hook to build your own UI, or override all classes via `classNames`.
 
 ## 🤝 Contributing
 
