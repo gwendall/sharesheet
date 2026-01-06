@@ -560,4 +560,4 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## 📄 License
 
-MIT © [Gwendall Esnault](https://github.com/gwendall)
+MIT © [Gwendall](https://github.com/gwendall)

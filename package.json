@@ -1,10 +1,14 @@
 {
   "name": "@gwendall/share-menu",
-  "version": "1.0.10",
+  "version": "1.0.0",
   "description": "A beautiful share menu component with social media integrations",
   "publishConfig": {
     "access": "public",
-    "registry": "https://npm.pkg.github.com"
+    "registry": "https://registry.npmjs.org"
+  },
+  "homepage": "https://github.com/gwendall/share-menu#readme",
+  "bugs": {
+    "url": "https://github.com/gwendall/share-menu/issues"
   },
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
@@ -36,10 +40,10 @@
     "dev": "tsup --watch",
     "prepack": "npm run clean && npm run build",
     "prepublishOnly": "npm run clean && npm run build",
-    "publish-patch": "npm version patch && dotenv -e .env.local -- npm publish",
-    "publish-minor": "npm version minor && dotenv -e .env.local -- npm publish",
-    "publish-major": "npm version major && dotenv -e .env.local -- npm publish",
-    "release": "dotenv -e .env.local -- npm publish",
+    "publish-patch": "npm version patch && npm publish",
+    "publish-minor": "npm version minor && npm publish",
+    "publish-major": "npm version major && npm publish",
+    "release": "npm publish",
     "type-check": "tsc --noEmit",
     "clean": "rm -rf dist"
   },
@@ -56,7 +60,7 @@
     "vaul",
     "tailwind"
   ],
-  "author": "Gwendall Esnault",
+  "author": "Gwendall",
   "license": "MIT",
   "peerDependencies": {
     "react": ">=18.0.0",
@@ -72,7 +76,6 @@
   "devDependencies": {
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
-    "dotenv-cli": "^8.0.0",
     "tsup": "^8.0.1",
     "typescript": "^5.3.3"
   },
