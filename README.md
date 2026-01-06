@@ -97,6 +97,74 @@ function CustomShareUI() {
 }
 ```
 
+## 🖼️ Content Preview
+
+The share menu can display a preview of the content being shared. It automatically detects the content type based on the URL and displays an appropriate preview.
+
+### Auto-detection
+
+```tsx
+// Image preview (detected from extension)
+<ShareMenuDrawer preview="https://example.com/image.png" {...props} />
+
+// Video preview (detected from extension)
+<ShareMenuDrawer preview="https://example.com/video.mp4" {...props} />
+
+// Audio file (shows icon + filename)
+<ShareMenuDrawer preview="https://example.com/song.mp3" {...props} />
+
+// Link (shows link icon + URL)
+<ShareMenuDrawer preview="https://example.com/page" {...props} />
+```
+
+### Explicit Type
+
+```tsx
+// Force image type (e.g., for API endpoints)
+<ShareMenuDrawer
+  preview={{ url: "/api/og?id=123", type: "image" }}
+  {...props}
+/>
+
+// Video with poster image
+<ShareMenuDrawer
+  preview={{
+    url: "https://example.com/video.mp4",
+    type: "video",
+    poster: "https://example.com/thumbnail.jpg"
+  }}
+  {...props}
+/>
+
+// File with custom filename
+<ShareMenuDrawer
+  preview={{
+    url: "https://example.com/doc.pdf",
+    type: "file",
+    filename: "Report Q4 2024.pdf"
+  }}
+  {...props}
+/>
+```
+
+### PreviewConfig
+
+```ts
+interface PreviewConfig {
+  url: string;              // URL of the content
+  type?: PreviewType;       // "image" | "video" | "audio" | "file" | "link" | "auto"
+  filename?: string;        // Display name for file/audio types
+  alt?: string;             // Alt text for images
+  poster?: string;          // Poster image for videos
+}
+```
+
+### Supported Formats
+
+- **Images**: jpg, jpeg, png, gif, webp, svg, bmp, ico, avif
+- **Videos**: mp4, webm, mov, avi, mkv, m4v, ogv
+- **Audio**: mp3, wav, ogg, m4a, aac, flac, wma
+
 ## 🎨 Theming
 
 ### CSS Variables
@@ -115,6 +183,10 @@ Override these variables to match your theme:
   --share-menu-title-color: #ffffff;
   --share-menu-subtitle-color: #a1a1aa;
   --share-menu-button-label-color: #ffffff;
+  
+  /* Image Preview */
+  --share-menu-preview-bg: rgba(255, 255, 255, 0.05);
+  --share-menu-preview-shimmer: rgba(255, 255, 255, 0.1);
   
   /* Platform colors (optional - defaults to brand colors) */
   --share-menu-whatsapp-bg: #25D366;
@@ -147,6 +219,10 @@ Override these variables to match your theme:
 --share-menu-title-color: #ffffff;
 --share-menu-subtitle-color: #a1a1aa;
 --share-menu-button-label-color: #ffffff;
+
+/* Image Preview */
+--share-menu-preview-bg: rgba(255, 255, 255, 0.05);
+--share-menu-preview-shimmer: rgba(255, 255, 255, 0.1);
 
 /* Platform backgrounds */
 --share-menu-native-share-bg: #7c3aed;
@@ -207,6 +283,7 @@ Override any part of the component with `classNames`:
 | `title` | `string` | `"Share"` | Title displayed at the top |
 | `shareUrl` | `string` | **required** | URL to share |
 | `shareText` | `string` | **required** | Text to share |
+| `preview` | `string \| PreviewConfig` | — | Preview of content (see Preview section below) |
 | `downloadUrl` | `string` | — | URL for download button |
 | `downloadFilename` | `string` | — | Filename for download |
 | `className` | `string` | — | Class for root container |

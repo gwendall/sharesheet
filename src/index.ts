@@ -14,6 +14,8 @@ export type {
   ShareOption,
   ShareButtonConfig,
   UseShareMenuReturn,
+  PreviewType,
+  PreviewConfig,
 } from "./types";
 
 // CSS Variables for UI (drawer, title, etc.)

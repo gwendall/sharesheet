@@ -75,9 +75,9 @@ export const PLATFORM_COLORS: Record<ShareOption, PlatformColor> = {
   email: { bg: "#f97316", text: "#ffffff" },
   linkedin: { bg: "#0A66C2", text: "#ffffff" },
   reddit: { bg: "#FF4500", text: "#ffffff" },
-  x: { bg: "rgba(255, 255, 255, 0.1)", text: "#ffffff" },
-  tiktok: { bg: "rgba(255, 255, 255, 0.1)", text: "#ffffff" },
-  threads: { bg: "rgba(255, 255, 255, 0.1)", text: "#ffffff" },
+  x: { bg: "#000000", text: "#ffffff" },
+  tiktok: { bg: "#000000", text: "#ffffff" },
+  threads: { bg: "#000000", text: "#ffffff" },
 } as const;
 
 /** Platform labels (SOURCE OF TRUTH) */

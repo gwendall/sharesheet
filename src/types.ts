@@ -11,6 +11,9 @@ export const CSS_VARS_UI = {
   titleColor: "--share-menu-title-color",
   subtitleColor: "--share-menu-subtitle-color",
   buttonLabelColor: "--share-menu-button-label-color",
+  // Preview
+  previewBg: "--share-menu-preview-bg",
+  previewShimmer: "--share-menu-preview-shimmer",
 } as const;
 
 /** Default values for UI CSS variables */
@@ -22,6 +25,8 @@ export const CSS_VAR_UI_DEFAULTS = {
   [CSS_VARS_UI.titleColor]: "#ffffff",
   [CSS_VARS_UI.subtitleColor]: "#a1a1aa",
   [CSS_VARS_UI.buttonLabelColor]: "#ffffff",
+  [CSS_VARS_UI.previewBg]: "rgba(255, 255, 255, 0.05)",
+  [CSS_VARS_UI.previewShimmer]: "rgba(255, 255, 255, 0.1)",
 } as const;
 
 /** Available share options */
@@ -52,6 +57,22 @@ export interface ShareMenuContentClassNames {
   title?: string;
   /** Subtitle/share text */
   subtitle?: string;
+  /** Preview container */
+  preview?: string;
+  /** Preview skeleton/loading wrapper */
+  previewSkeleton?: string;
+  /** Preview image element */
+  previewImage?: string;
+  /** Preview video element */
+  previewVideo?: string;
+  /** Preview file/audio container */
+  previewFile?: string;
+  /** Preview file icon */
+  previewFileIcon?: string;
+  /** Preview filename text */
+  previewFilename?: string;
+  /** Preview link container */
+  previewLink?: string;
   /** Buttons grid container */
   grid?: string;
   /** Individual button wrapper */
@@ -76,6 +97,23 @@ export interface ShareMenuDrawerClassNames extends ShareMenuContentClassNames {
   trigger?: string;
 }
 
+/** Preview content type */
+export type PreviewType = "image" | "video" | "audio" | "file" | "link" | "auto";
+
+/** Preview configuration */
+export interface PreviewConfig {
+  /** URL of the content to preview */
+  url: string;
+  /** Type of content (auto-detected if not provided) */
+  type?: PreviewType;
+  /** Filename to display (for file/audio types) */
+  filename?: string;
+  /** Alt text for images */
+  alt?: string;
+  /** Poster image for videos */
+  poster?: string;
+}
+
 export interface ShareMenuContentProps {
   /** Title displayed at the top of the menu */
   title?: string;
@@ -83,6 +121,10 @@ export interface ShareMenuContentProps {
   shareUrl: string;
   /** Text to share alongside the URL */
   shareText: string;
+  /** Preview of content being shared (string URL or config object) */
+  preview?: string | PreviewConfig | null;
+  /** @deprecated Use preview instead */
+  imageUrl?: string | null;
   /** Optional URL for download functionality */
   downloadUrl?: string | null;
   /** Filename for downloaded file */

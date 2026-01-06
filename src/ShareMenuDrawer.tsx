@@ -1,12 +1,11 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { Drawer } from "vaul";
 
 import { cn } from "./utils";
 import { ShareMenuContent } from "./ShareMenuContent";
 import { CSS_VARS_UI, CSS_VAR_UI_DEFAULTS, type ShareMenuDrawerProps } from "./types";
-import { PLATFORM_IDS, PLATFORM_COLORS, PLATFORM_CSS_VARS } from "./platforms";
 
 // Default class names for drawer
 const defaultDrawerClasses = {
@@ -16,6 +15,11 @@ const defaultDrawerClasses = {
   handle: "mx-auto w-12 h-1.5 shrink-0 rounded-full mb-6",
   trigger: "",
 };
+
+// Helper to create var() with fallback
+function cssVar(name: string, fallback: string): string {
+  return `var(${name}, ${fallback})`;
+}
 
 export function ShareMenuDrawer({
   title = "Share",
@@ -47,16 +51,6 @@ export function ShareMenuDrawer({
     ? (value: boolean) => controlledOnOpenChange?.(value)
     : setInternalOpen;
 
-  // CSS variable style (UI vars + platform vars from single source of truth)
-  const cssVarStyle = useMemo(() => {
-    const style: Record<string, string> = { ...CSS_VAR_UI_DEFAULTS };
-    // Add platform color CSS vars
-    PLATFORM_IDS.forEach((id) => {
-      style[PLATFORM_CSS_VARS[id]] = PLATFORM_COLORS[id].bg;
-    });
-    return style;
-  }, []);
-
   return (
     <Drawer.Root open={open} onOpenChange={setOpen} shouldScaleBackground>
       <Drawer.Trigger asChild>
@@ -74,26 +68,28 @@ export function ShareMenuDrawer({
         <Drawer.Overlay
           className={cn(defaultDrawerClasses.overlay, classNames.overlay)}
           style={{
-            backgroundColor: `var(${CSS_VARS_UI.overlayBg})`,
-            ...cssVarStyle,
+            backgroundColor: cssVar(CSS_VARS_UI.overlayBg, CSS_VAR_UI_DEFAULTS[CSS_VARS_UI.overlayBg]),
           }}
         />
         <Drawer.Content
           className={cn(defaultDrawerClasses.drawer, classNames.drawer)}
           style={{
-            backgroundColor: `var(${CSS_VARS_UI.drawerBg})`,
-            borderColor: `var(${CSS_VARS_UI.drawerBorder})`,
-            ...cssVarStyle,
+            backgroundColor: cssVar(CSS_VARS_UI.drawerBg, CSS_VAR_UI_DEFAULTS[CSS_VARS_UI.drawerBg]),
+            borderColor: cssVar(CSS_VARS_UI.drawerBorder, CSS_VAR_UI_DEFAULTS[CSS_VARS_UI.drawerBorder]),
           }}
         >
           <Drawer.Title className="sr-only">{title}</Drawer.Title>
           <div
             className={cn(defaultDrawerClasses.drawerInner, classNames.drawerInner)}
-            style={{ backgroundColor: `var(${CSS_VARS_UI.drawerBg})` }}
+            style={{
+              backgroundColor: cssVar(CSS_VARS_UI.drawerBg, CSS_VAR_UI_DEFAULTS[CSS_VARS_UI.drawerBg]),
+            }}
           >
             <div
               className={cn(defaultDrawerClasses.handle, classNames.handle)}
-              style={{ backgroundColor: `var(${CSS_VARS_UI.handleBg})` }}
+              style={{
+                backgroundColor: cssVar(CSS_VARS_UI.handleBg, CSS_VAR_UI_DEFAULTS[CSS_VARS_UI.handleBg]),
+              }}
             />
 
             <ShareMenuContent
