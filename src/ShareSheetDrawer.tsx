@@ -40,6 +40,9 @@ export function ShareSheetDrawer({
   shareText,
   downloadUrl,
   downloadFilename,
+  previewImage,
+  shareFile,
+  shareFilename,
   disabled,
   children,
   open: controlledOpen,
@@ -111,6 +114,9 @@ export function ShareSheetDrawer({
               shareText={shareText}
               downloadUrl={downloadUrl}
               downloadFilename={downloadFilename}
+              previewImage={previewImage}
+              shareFile={shareFile}
+              shareFilename={shareFilename}
               className={className}
               classNames={classNames}
               buttonSize={buttonSize}

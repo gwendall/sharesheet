@@ -50,6 +50,10 @@ export interface UseShareSheetOptions {
   downloadFilename?: string;
   /** Email subject (optional) */
   emailSubject?: string;
+  /** File to share via native share (data URL or Blob) - takes priority over URL sharing */
+  shareFile?: string | Blob | null;
+  /** Filename for the shared file */
+  shareFilename?: string;
   /** Callback after native share */
   onNativeShare?: () => void;
   /** Callback after copy */
@@ -68,6 +72,8 @@ export function useShareSheet({
   downloadUrl,
   downloadFilename,
   emailSubject = "Share",
+  shareFile,
+  shareFilename = "share.png",
   onNativeShare,
   onCopy,
   onDownload,
@@ -105,12 +111,64 @@ export function useShareSheet({
   }, [safeUrl, onCopy]);
 
   const nativeShare = useCallback(async () => {
-    if (!safeUrl) return;
     const nav = navigator as Navigator & {
       share?: (data: ShareData) => Promise<void>;
+      canShare?: (data: ShareData) => boolean;
     };
     if (!("share" in nav) || typeof nav.share !== "function") return;
+
     try {
+      // If shareFile is provided, try to share as a file
+      if (shareFile) {
+        let blob: Blob;
+
+        // Convert data URL to Blob if needed
+        if (typeof shareFile === "string" && shareFile.startsWith("data:")) {
+          const response = await fetch(shareFile);
+          blob = await response.blob();
+        } else if (shareFile instanceof Blob) {
+          blob = shareFile;
+        } else {
+          // Invalid shareFile, fall back to URL sharing
+          if (!safeUrl) return;
+          await nav.share({
+            title: shareText,
+            text: shareText,
+            url: safeUrl,
+          });
+          onNativeShare?.();
+          return;
+        }
+
+        // Create a File from the Blob
+        const file = new File([blob], shareFilename, { type: blob.type || "image/png" });
+
+        // Check if file sharing is supported
+        const shareData: ShareData = {
+          files: [file],
+          title: shareText,
+          text: shareText,
+        };
+
+        if (nav.canShare && !nav.canShare(shareData)) {
+          // File sharing not supported, fall back to URL sharing
+          if (!safeUrl) return;
+          await nav.share({
+            title: shareText,
+            text: shareText,
+            url: safeUrl,
+          });
+          onNativeShare?.();
+          return;
+        }
+
+        await nav.share(shareData);
+        onNativeShare?.();
+        return;
+      }
+
+      // Fall back to URL sharing
+      if (!safeUrl) return;
       await nav.share({
         title: shareText,
         text: shareText,
@@ -120,7 +178,7 @@ export function useShareSheet({
     } catch {
       // user canceled or share failed -> ignore
     }
-  }, [safeUrl, shareText, onNativeShare]);
+  }, [safeUrl, shareText, shareFile, shareFilename, onNativeShare]);
 
   const downloadFile = useCallback(async () => {
     const url = (downloadUrl ?? "").trim();

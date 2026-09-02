@@ -21,7 +21,7 @@ export const CSS_VAR_UI_DEFAULTS = {
   [CSS_VARS_UI.overlayBg]: "rgba(0, 0, 0, 0.7)",
   [CSS_VARS_UI.drawerBg]: "#09090b",
   [CSS_VARS_UI.drawerBorder]: "#27272a",
-  [CSS_VARS_UI.handleBg]: "#27272a",
+  [CSS_VARS_UI.handleBg]: "rgba(255, 255, 255, 0.2)",
   [CSS_VARS_UI.titleColor]: "#ffffff",
   [CSS_VARS_UI.subtitleColor]: "#a1a1aa",
   [CSS_VARS_UI.buttonLabelColor]: "#ffffff",
@@ -108,6 +108,12 @@ export interface ShareSheetContentProps {
   downloadUrl?: string | null;
   /** Filename for downloaded file */
   downloadFilename?: string;
+  /** Custom preview image URL (skips OG fetching if provided) */
+  previewImage?: string | null;
+  /** File to share via native share (data URL or Blob) - takes priority over URL sharing */
+  shareFile?: string | Blob | null;
+  /** Filename for the shared file */
+  shareFilename?: string;
   /** Custom class name for the container (shorthand for classNames.root) */
   className?: string;
   /** Override class names for sub-components */
@@ -122,6 +128,8 @@ export interface ShareSheetContentProps {
   onCopy?: () => void;
   /** Called when download starts */
   onDownload?: () => void;
+  /** Called on every share option click, with the option id (analytics-friendly) */
+  onShare?: (option: ShareOption) => void;
   /** Hide specific share options */
   hide?: ShareOption[];
   /** Show only these platforms, in this exact order */
