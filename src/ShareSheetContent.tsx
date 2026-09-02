@@ -28,9 +28,9 @@ const defaultClasses = {
   header: "text-center mb-2",
   title: "text-2xl font-black",
   subtitle: "mt-1 text-sm",
-  preview: "flex justify-center mb-4 px-4",
+  preview: "flex justify-center my-4 px-4",
   previewSkeleton: "rounded-xl overflow-hidden",
-  previewImage: "border border-white/10",
+  previewImage: "border border-white/10 rounded-xl",
   previewMeta: "",
   grid: "px-2 py-6 flex flex-row items-start gap-4 gap-y-6 flex-wrap justify-center",
   button: "flex flex-col items-center gap-0 text-xs w-[60px] outline-none cursor-pointer group",
@@ -64,12 +64,16 @@ export function ShareSheetContent({
   shareText,
   downloadUrl,
   downloadFilename,
+  previewImage,
+  shareFile,
+  shareFilename,
   className,
   classNames = {},
   buttonSize = DEFAULT_BUTTON_SIZE,
   iconSize = DEFAULT_ICON_SIZE,
   onNativeShare,
   onCopy,
+  onShare,
   onDownload,
   hide = [],
   show,
@@ -79,8 +83,8 @@ export function ShareSheetContent({
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
 
-  // Fetch OG data automatically from shareUrl
-  const { ogData, loading: ogLoading } = useOGData(shareUrl);
+  // Only fetch OG data if previewImage is not provided
+  const { ogData, loading: ogLoading } = useOGData(previewImage ? undefined : shareUrl);
 
   const handleImageLoad = useCallback(() => {
     setImageLoaded(true);
@@ -96,6 +100,8 @@ export function ShareSheetContent({
     downloadUrl,
     downloadFilename,
     emailSubject: shareText,
+    shareFile,
+    shareFilename,
     onNativeShare,
     onCopy,
     onDownload,
@@ -151,11 +157,14 @@ export function ShareSheetContent({
         // Use CSS var with fallback to platform color
         bgColor: cssVar(PLATFORM_CSS_VARS[id], PLATFORM_COLORS[id].bg),
         textColor: PLATFORM_COLORS[id].text,
-        onClick: shareActions[id],
+        onClick: () => {
+          onShare?.(id);
+          shareActions[id]();
+        },
         condition,
       };
     });
-  }, [iconSize, labels, icons, dynamicLabels, shareActions, shareSheet.canNativeShare, shareSheet.platformAvailability, downloadUrl]);
+  }, [iconSize, labels, icons, dynamicLabels, shareActions, onShare, shareSheet.canNativeShare, shareSheet.platformAvailability, downloadUrl]);
 
   const visibleButtons = useMemo(() => {
     // If show is provided, use its order
@@ -184,11 +193,13 @@ export function ShareSheetContent({
 
   // Render OG preview
   const renderPreview = () => {
-    const ogImage = ogData?.image;
+    // Use previewImage if provided, otherwise use OG data
+    const ogImage = previewImage || ogData?.image;
     const hasImage = ogImage && !imageError;
+    const isLoading = !previewImage && ogLoading;
 
-    // Loading state
-    if (ogLoading) {
+    // Loading state (only when fetching OG data, not when previewImage is provided)
+    if (isLoading) {
       return (
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }}>
           <div
@@ -221,8 +232,8 @@ export function ShareSheetContent({
       );
     }
 
-    // No OG data or no image - show link placeholder
-    if (!ogData || !hasImage) {
+    // No image available - show link placeholder (skip if previewImage was provided)
+    if (!hasImage) {
       return (
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }}>
           <div
@@ -274,7 +285,27 @@ export function ShareSheetContent({
       );
     }
 
-    // Image loading state
+    // If previewImage is a data URL, show it directly (no preloading needed)
+    const isDataUrl = typeof ogImage === "string" && ogImage.startsWith("data:");
+    if (isDataUrl) {
+      return (
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={ogImage}
+            alt="Preview"
+            className={cn(defaultClasses.previewImage, classNames.previewImage)}
+            style={{
+              width: "100%",
+              maxWidth: "320px",
+              height: "auto",
+            }}
+          />
+        </div>
+      );
+    }
+
+    // Image loading state (for remote URLs)
     if (!imageLoaded) {
       return (
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }}>
@@ -308,7 +339,7 @@ export function ShareSheetContent({
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={ogImage}
-            alt={ogData.title || "Preview"}
+            alt={ogData?.title || "Preview"}
             onLoad={handleImageLoad}
             onError={handleImageError}
             style={{ display: "none" }}
@@ -323,13 +354,12 @@ export function ShareSheetContent({
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={ogImage}
-          alt={ogData.title || "Preview"}
+          alt={ogData?.title || "Preview"}
           className={cn(defaultClasses.previewImage, classNames.previewImage, "sharesheet-fadein")}
           style={{
             width: "100%",
             maxWidth: "320px",
             height: "auto",
-            borderRadius: "12px",
           }}
         />
       </div>

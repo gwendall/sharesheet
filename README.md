@@ -47,6 +47,11 @@ Add the package source to your CSS file:
 @source "../../node_modules/react-sharesheet/dist";
 ```
 
+> **Monorepo note (pnpm/bun workspaces):** the package is usually hoisted to the repository ROOT
+> `node_modules`, not your app's. Point `@source` at the root, e.g. from `apps/web/src/app/globals.css`:
+> `@source "../../../../node_modules/react-sharesheet/dist";` - a wrong path fails silently and the
+> drawer renders unstyled (invisible).
+
 #### Tailwind v3
 
 Add the package to your `tailwind.config.js` content array:
@@ -309,6 +314,9 @@ Override any part of the component with `classNames`:
 | `shareText` | `string` | **required** | Text to share |
 | `downloadUrl` | `string` | - | URL for download button |
 | `downloadFilename` | `string` | - | Filename for download |
+| `previewImage` | `string \| null` | - | Custom preview image URL (skips OG fetching) |
+| `shareFile` | `string \| Blob \| null` | - | File shared via native share (data URL or Blob); takes priority over URL sharing |
+| `shareFilename` | `string` | `"share.png"` | Filename for the shared file |
 | `className` | `string` | - | Class for root container |
 | `classNames` | `object` | - | Override sub-component classes |
 | `buttonSize` | `number` | `45` | Button size in pixels |
@@ -320,6 +328,7 @@ Override any part of the component with `classNames`:
 | `onNativeShare` | `() => void` | - | Native share callback |
 | `onCopy` | `() => void` | - | Copy callback |
 | `onDownload` | `() => void` | - | Download callback |
+| `onShare` | `(option: ShareOption) => void` | - | Called on every share option click, with the option id (analytics) |
 
 #### ShareSheetDrawer (additional)
 

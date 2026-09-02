@@ -1,6 +1,6 @@
 {
   "name": "react-sharesheet",
-  "version": "1.8.0",
+  "version": "1.9.0",
   "description": "A mobile-first share sheet for React with native share support, Open Graph previews, 15+ social platforms, and headless APIs. Tailwind-styled by default, fully customizable.",
   "publishConfig": {
     "access": "public",
