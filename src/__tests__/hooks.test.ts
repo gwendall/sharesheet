@@ -115,7 +115,7 @@ describe("useOGData", () => {
   });
 
   it("should return initial loading state", () => {
-    vi.mocked(global.fetch).mockImplementation(
+    vi.mocked(globalThis.fetch).mockImplementation(
       () => new Promise(() => {}) // Never resolves
     );
 
@@ -137,7 +137,7 @@ describe("useOGData", () => {
       },
     };
 
-    vi.mocked(global.fetch).mockResolvedValueOnce({
+    vi.mocked(globalThis.fetch).mockResolvedValueOnce({
       ok: true,
       json: () => Promise.resolve(mockResponse),
     } as Response);
@@ -175,7 +175,7 @@ describe("useOGData", () => {
       data: { title: "Page 2", url: "https://example2.com" },
     };
 
-    vi.mocked(global.fetch)
+    vi.mocked(globalThis.fetch)
       .mockResolvedValueOnce({
         ok: true,
         json: () => Promise.resolve(mockResponse1),

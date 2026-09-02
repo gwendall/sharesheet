@@ -19,7 +19,7 @@ describe("og-fetcher", () => {
       },
     };
 
-    vi.mocked(global.fetch).mockResolvedValueOnce({
+    vi.mocked(globalThis.fetch).mockResolvedValueOnce({
       ok: true,
       json: () => Promise.resolve(mockResponse),
     } as Response);
@@ -36,7 +36,7 @@ describe("og-fetcher", () => {
   });
 
   it("should return null on failed fetch", async () => {
-    vi.mocked(global.fetch).mockResolvedValueOnce({
+    vi.mocked(globalThis.fetch).mockResolvedValueOnce({
       ok: false,
       status: 404,
     } as Response);
@@ -52,7 +52,7 @@ describe("og-fetcher", () => {
       data: null,
     };
 
-    vi.mocked(global.fetch).mockResolvedValueOnce({
+    vi.mocked(globalThis.fetch).mockResolvedValueOnce({
       ok: true,
       json: () => Promise.resolve(mockResponse),
     } as Response);
@@ -73,7 +73,7 @@ describe("og-fetcher", () => {
       },
     };
 
-    vi.mocked(global.fetch).mockResolvedValueOnce({
+    vi.mocked(globalThis.fetch).mockResolvedValueOnce({
       ok: true,
       json: () => Promise.resolve(mockResponse),
     } as Response);
@@ -84,7 +84,7 @@ describe("og-fetcher", () => {
     const result2 = await fetchOGData("https://example.com/cached");
 
     expect(result1).toEqual(result2);
-    expect(global.fetch).toHaveBeenCalledTimes(1);
+    expect(globalThis.fetch).toHaveBeenCalledTimes(1);
   });
 
   it("should clear cache", async () => {
@@ -96,7 +96,7 @@ describe("og-fetcher", () => {
       },
     };
 
-    vi.mocked(global.fetch).mockResolvedValue({
+    vi.mocked(globalThis.fetch).mockResolvedValue({
       ok: true,
       json: () => Promise.resolve(mockResponse),
     } as Response);
@@ -105,11 +105,11 @@ describe("og-fetcher", () => {
     clearOGCache();
     await fetchOGData("https://example.com");
 
-    expect(global.fetch).toHaveBeenCalledTimes(2);
+    expect(globalThis.fetch).toHaveBeenCalledTimes(2);
   });
 
   it("should handle network errors gracefully", async () => {
-    vi.mocked(global.fetch).mockRejectedValueOnce(new Error("Network error"));
+    vi.mocked(globalThis.fetch).mockRejectedValueOnce(new Error("Network error"));
 
     const result = await fetchOGData("https://example.com");
 
@@ -126,7 +126,7 @@ describe("og-fetcher", () => {
       },
     };
 
-    vi.mocked(global.fetch).mockResolvedValueOnce({
+    vi.mocked(globalThis.fetch).mockResolvedValueOnce({
       ok: true,
       json: () => Promise.resolve(mockResponse),
     } as Response);
