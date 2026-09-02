@@ -42,7 +42,7 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "prepack": "npm run clean && npm run build",
-    "prepublishOnly": "npm run clean && npm run build",
+    "prepublishOnly": "pnpm run type-check && pnpm run test && pnpm run build",
     "publish-patch": "npm version patch && npm publish",
     "publish-minor": "npm version minor && npm publish",
     "publish-major": "npm version major && npm publish",
