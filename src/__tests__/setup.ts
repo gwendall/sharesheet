@@ -19,4 +19,4 @@ Object.defineProperty(navigator, "clipboard", {
 vi.stubGlobal("open", vi.fn());
 
 // Mock fetch for OG data tests
-global.fetch = vi.fn();
+globalThis.fetch = vi.fn();

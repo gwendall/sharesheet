@@ -16,6 +16,31 @@ const defaultDrawerClasses = {
   trigger: "",
 };
 
+/**
+ * Vaul passes the trigger's button semantics down to whatever element it receives:
+ * `type="button"`, `aria-haspopup="dialog"` and `aria-expanded`. Handing it a plain
+ * `div` puts button attributes on a non-button, which axe reports as a critical
+ * `aria-allowed-attr` violation and which screen readers cannot announce.
+ *
+ * So the trigger element is the one the caller already provided, usually their own
+ * button, with the trigger classes merged in. Only a bare string or a fragment needs a
+ * host element, and that host is a real button.
+ */
+function renderTrigger(children: React.ReactNode, className: string): React.ReactElement {
+  if (React.isValidElement(children)) {
+    if (!className) return children;
+    const childClassName = (children.props as { className?: string }).className;
+    return React.cloneElement(children as React.ReactElement<{ className?: string }>, {
+      className: cn(childClassName, className),
+    });
+  }
+  return (
+    <button type="button" className={className}>
+      {children}
+    </button>
+  );
+}
+
 // Helper to create var() with fallback
 function cssVar(name: string, fallback: string): string {
   return `var(${name}, ${fallback})`;
@@ -70,15 +95,11 @@ export function ShareSheetDrawer({
   return (
     <Drawer.Root open={open} onOpenChange={setOpen} shouldScaleBackground>
       <Drawer.Trigger asChild>
-        <div
-          className={cn(
-            defaultDrawerClasses.trigger,
-            classNames.trigger,
-            disabled ? "pointer-events-none opacity-50" : ""
-          )}
-        >
-          {children}
-        </div>
+        {renderTrigger(children, cn(
+          defaultDrawerClasses.trigger,
+          classNames.trigger,
+          disabled ? "pointer-events-none opacity-50" : ""
+        ))}
       </Drawer.Trigger>
       <Drawer.Portal>
         <Drawer.Overlay
